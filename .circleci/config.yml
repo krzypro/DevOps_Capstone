@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-app:
     docker:
-      - image: cimg/base:2020.01 # ubuntu:20.04
+      - image: cimg/base:2020.01
     steps:
       - checkout
       - run:
@@ -20,6 +20,13 @@ jobs:
       - run:
           name: Check dotnet
           command: dotnet --version
+      - run:
+          name: Build test application
+          command: |
+            cd testapp
+            dotnet restore
+            dotnet build -c Release
+            ls bin/Release/net6.0/publish
 
 workflows:
   default:
