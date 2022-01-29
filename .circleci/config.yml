@@ -9,16 +9,14 @@ jobs:
       - run:
           name: Setup build environment
           command: |
-            sudo apt-get update
-            sudo apt-get install sudo
-            sudo apt-get install wget
+            apt-get install wget
             wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-            sudo dpkg -i packages-microsoft-prod.deb
+            dpkg -i packages-microsoft-prod.deb
             rm packages-microsoft-prod.deb
-            sudo apt-get update; \
-              sudo apt-get install -y apt-transport-https && \
-              sudo apt-get update && \
-              sudo apt-get install -y dotnet-sdk-6.0
+            apt-get update; \
+              apt-get install -y apt-transport-https && \
+              apt-get update && \
+              apt-get install -y dotnet-sdk-6.0
       - run:
           name: Check dotnet
           command: dotnet -v
