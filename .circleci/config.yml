@@ -19,3 +19,8 @@ jobs:
       - run:
           name: Check dotnet
           command: dotnet -v
+
+workflows:
+  default:
+    jobs:
+      - build-app
