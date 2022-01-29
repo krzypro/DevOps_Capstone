@@ -6,16 +6,16 @@ jobs:
       - image: ubuntu:20.04
     steps:
       - checkout
-      # - run:
-      #     name: Setup build environment
-      #     command: |
-      #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-      #       sudo dpkg -i packages-microsoft-prod.deb
-      #       rm packages-microsoft-prod.deb
-      #       sudo apt-get update; \
-      #         sudo apt-get install -y apt-transport-https && \
-      #         sudo apt-get update && \
-      #         sudo apt-get install -y dotnet-sdk-6.0
+      - run:
+          name: Setup build environment
+          command: |
+            wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+            sudo dpkg -i packages-microsoft-prod.deb
+            rm packages-microsoft-prod.deb
+            sudo apt-get update; \
+              sudo apt-get install -y apt-transport-https && \
+              sudo apt-get update && \
+              sudo apt-get install -y dotnet-sdk-6.0
       - run:
           name: Check dotnet
           command: dotnet -v
