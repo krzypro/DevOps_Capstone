@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-app:
     docker:
-      - image: circleci/node:13.8.0 # ubuntu:20.04
+      - image: ubuntu:20.04
     steps:
       - checkout
       # - run:
