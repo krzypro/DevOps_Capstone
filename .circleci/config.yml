@@ -26,6 +26,7 @@ jobs:
             cd testapp
             dotnet restore
             dotnet build -c Release
+            dotnet publish -c Release
             ls bin/Release/net6.0/publish
 
 workflows:
