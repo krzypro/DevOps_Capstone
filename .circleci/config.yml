@@ -19,7 +19,7 @@ jobs:
               sudo apt-get install -y dotnet-sdk-6.0
       - run:
           name: Check dotnet
-          command: dotnet -v
+          command: dotnet --version
 
 workflows:
   default:
