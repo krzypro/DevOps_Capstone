@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-app:
     docker:
-      - image: alpine # ubuntu:20.04
+      - image: cimg/base:2020.01 # ubuntu:20.04
     steps:
       - checkout
       - run:
