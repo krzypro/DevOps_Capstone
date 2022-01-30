@@ -1,14 +1,13 @@
-namespace TestApp.Controllers
-{
-    using Microsoft.AspNetCore.Mvc;
+namespace TestApp.Controllers;
 
-    public class HomeController : Controller
+using Microsoft.AspNetCore.Mvc;
+
+public class HomeController : Controller
+{
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-            this.ViewData["Environment"] = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            return this.View();
-        }
+        Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+        this.ViewData["Environment"] = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        return this.View();
     }
 }
