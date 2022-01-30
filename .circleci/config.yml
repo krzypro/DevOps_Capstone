@@ -53,7 +53,7 @@ jobs:
           name: Lint application
           command: |
             ~/hadolint Dockerfile
-            dotnet format
+            dotnet format --verify-no-changes
 
 
 workflows:
