@@ -1,4 +1,4 @@
-namespace testapp.Controllers;
+namespace TestApp.Controllers;
 using System;
 using Microsoft.AspNetCore.Mvc;
 
