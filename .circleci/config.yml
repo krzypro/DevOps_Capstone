@@ -41,6 +41,10 @@ jobs:
             dotnet build -c Release
             dotnet publish -c Release
             ls bin/Release/net6.0/publish
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ./testapp/bin/Release/net6.0/publish
 
   lint-app:
     docker:
@@ -62,6 +66,8 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
+      - attach_workspace:
+          at: ./
       - checkout
       - setup_remote_docker
       - run:
@@ -87,9 +93,10 @@ workflows:
   default:
     jobs:
       - build-app
-      - lint-app:
-          requires: [build-app]
+      # - lint-app:
+      #     requires: [build-app]
       - docker-build:
-          requires: [lint-app]
-      - docker-publish:
-          requires: [docker-build]
+          requires: build-app
+      #     requires: [lint-app]
+      # - docker-publish:
+      #     requires: [docker-build]
