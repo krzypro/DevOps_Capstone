@@ -21,7 +21,7 @@ commands:
           command: |
             sudo apt-get install wget
             wget -O ~/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64 &&\
-		          chmod +x ~/hadolint
+              chmod +x ~/hadolint
 
 jobs:
   build-app:
