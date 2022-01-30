@@ -56,6 +56,32 @@ jobs:
             cd testapp
             dotnet format --verify-no-changes
 
+  docker-build:
+    environment:
+      IMAGE_NAME: pkrzysztoff/capstone-test-app
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME:latest .
+
+  docker-publish:
+    environment:
+      IMAGE_NAME: pkrzysztoff/capstone-test-app
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker push $IMAGE_NAME:latest
+  
+
 
 workflows:
   default:
@@ -63,3 +89,7 @@ workflows:
       - build-app
       - lint-app:
           requires: [build-app]
+      - docker-build:
+          requires: [lint-app]
+      - docker-publish:
+          requires: [docker-build]
