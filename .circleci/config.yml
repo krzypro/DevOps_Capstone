@@ -42,9 +42,9 @@ jobs:
             dotnet publish -c Release
             ls bin/Release/net6.0/publish
       - persist_to_workspace:
-          root: ../
+          root: ./
           paths:
-            - ./testapp/bin/Release/net6.0/publish/
+            - testapp/bin/Release/net6.0/publish/
 
   lint-app:
     docker:
