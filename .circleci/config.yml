@@ -1,5 +1,20 @@
 version: 2.1
 
+commands:
+  install_dotnet:
+    steps:
+      - run:
+          name: Install .Net Core 6 SDK
+          command: |
+            sudo apt-get install wget
+            wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+            sudo dpkg -i packages-microsoft-prod.deb
+            sudo rm packages-microsoft-prod.deb
+            sudo apt-get update; \
+              sudo apt-get install -y apt-transport-https && \
+              sudo apt-get update && \
+              sudo apt-get install -y dotnet-sdk-6.0
+
 jobs:
   build-app:
     docker:
@@ -29,7 +44,15 @@ jobs:
             dotnet publish -c Release
             ls bin/Release/net6.0/publish
 
+  lint-app:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout
+      - install_dotnet
+
 workflows:
   default:
     jobs:
       - build-app
+      - lint-app
