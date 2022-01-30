@@ -93,10 +93,13 @@ workflows:
   default:
     jobs:
       - build-app
+
       # - lint-app:
       #     requires: [build-app]
+
       - docker-build:
-          requires: build-app
+          requires: [build-app]
+
       #     requires: [lint-app]
       # - docker-publish:
       #     requires: [docker-build]
