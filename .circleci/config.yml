@@ -44,7 +44,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - ./testapp/bin/Release/net6.0/publish
+            - ./testapp/bin/Release/net6.0/publish/
 
   lint-app:
     docker:
