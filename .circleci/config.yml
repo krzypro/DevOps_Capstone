@@ -14,6 +14,14 @@ commands:
               sudo apt-get install -y apt-transport-https && \
               sudo apt-get update && \
               sudo apt-get install -y dotnet-sdk-6.0
+  install_hadolint:
+    steps:
+      - run:
+          name: Install hadolint
+          command: |
+            sudo apt-get install wget
+            wget -O ~/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64 &&\
+		          chmod +x ~/hadolint
 
 jobs:
   build-app:
@@ -21,17 +29,7 @@ jobs:
       - image: cimg/base:2020.01
     steps:
       - checkout
-      - run:
-          name: Setup build environment
-          command: |
-            sudo apt-get install wget
-            wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-            sudo dpkg -i packages-microsoft-prod.deb
-            sudo rm packages-microsoft-prod.deb
-            sudo apt-get update; \
-              sudo apt-get install -y apt-transport-https && \
-              sudo apt-get update && \
-              sudo apt-get install -y dotnet-sdk-6.0
+      - install_dotnet
       - run:
           name: Check dotnet
           command: dotnet --version
@@ -50,9 +48,17 @@ jobs:
     steps:
       - checkout
       - install_dotnet
+      - install_hadolint
+      - run:
+          name: Lint application
+          command: |
+            ~/hadolint Dockerfile
+            dotnet format
+
 
 workflows:
   default:
     jobs:
       - build-app
-      - lint-app
+      - lint-app:
+          requires: [build-app]
