@@ -1,0 +1,191 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Kubernetes environment setup - network
+Parameters:
+
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resources
+        Type: String
+
+    VpcCIDR:
+        Description: VPC CIDR value
+        Type: String
+
+    PublicSubnetCIDR:
+        Description: Public subnet IP range CIDR notation
+        Type: String
+
+    PrivateSubnetCIDR:
+        Description: Private subnet IP range CIDR notation
+        Type: String
+
+Resources:
+
+    # Virtual Private Cloud
+
+    VPC:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: !Ref VpcCIDR
+            EnableDnsSupport: true
+            EnableDnsHostnames: true
+            Tags:
+            -   Key: Name
+                Value: !Ref EnvironmentName
+            -   Key: !Sub kubernetes.io/cluster/${EnvironmentName}
+                Value: shared
+
+    # Internet gateway
+
+    InternetGateway:
+        Type: AWS::EC2::InternetGateway
+        Properties:
+            Tags:
+            -   Key: Name
+                Value: !Ref EnvironmentName
+
+    InternetGatewayAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+                InternetGatewayId: !Ref InternetGateway
+                VpcId: !Ref VPC
+
+    # Subnets
+
+    PublicSubnet:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PublicSubnetCIDR
+            MapPublicIpOnLaunch: true
+            Tags:
+            -   Key: Name
+                Value: !Sub ${EnvironmentName} Public Subnet
+            -   Key: !Sub kubernetes.io/cluster/${EnvironmentName}
+                Value: owned 
+            -   Key: kubernetes.io/role/elb
+                Value: 1
+
+    PrivateSubnet:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PrivateSubnetCIDR
+            MapPublicIpOnLaunch: false
+            Tags:
+            -   Key: Name
+                Value: !Sub ${EnvironmentName} Private Subnet
+            -   Key: !Sub kubernetes.io/cluster/${EnvironmentName}
+                Value: owned
+            -   Key: kubernetes.io/role/internal-elb
+                Value: 1
+                
+    # NAT section
+
+    NatGatewayEIP: # elastic IP reservation, otherwise public IP will not be constant
+        Type: AWS::EC2::EIP
+        DependsOn: InternetGatewayAttachment # wait on creation of InternetGatewayAttachment resource
+        Properties:
+            Domain: vpc
+            Tags:
+            -   Key: Name
+                Value: !Sub ${EnvironmentName} EIP
+
+    NatGateway:
+        Type: AWS::EC2::NatGateway
+        Properties:
+            AllocationId: !GetAtt NatGatewayEIP.AllocationId # gets the allocated elastic IP
+            SubnetId: !Ref PublicSubnet
+
+    # Public route table
+
+    PublicRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref VPC
+            Tags:
+            -   Key: Name
+                Value: !Sub ${EnvironmentName} Public Routes
+
+    DefaultPublicRoute:
+        Type: AWS::EC2::Route
+        DependsOn: InternetGatewayAttachment
+        Properties:
+            RouteTableId: !Ref PublicRouteTable
+            DestinationCidrBlock: 0.0.0.0/0
+            GatewayId: !Ref InternetGateway
+
+    PublicSubnetRouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            RouteTableId: !Ref PublicRouteTable
+            SubnetId: !Ref PublicSubnet
+
+    # Private route tables 
+
+    PrivateRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref VPC
+            Tags:
+            -   Key: Name
+                Value: !Sub ${EnvironmentName} Private Routes
+
+    DefaultPrivateRoute:
+        Type: AWS::EC2::Route
+        Properties:
+            RouteTableId: !Ref PrivateRouteTable
+            DestinationCidrBlock: 0.0.0.0/0
+            NatGatewayId: !Ref NatGateway
+
+    PrivateSubnetRouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            RouteTableId: !Ref PrivateRouteTable
+            SubnetId: !Ref PrivateSubnet
+
+Outputs:
+
+    VPC:
+        Description: A reference to VPC
+        Value: !Ref VPC
+        Export:
+            Name: !Sub ${EnvironmentName}-VPCID
+
+    VPCPublicRouteTable:
+        Description: Public Routing
+        Value: !Ref PublicRouteTable
+        Export:
+            Name: !Sub ${EnvironmentName}-PUB-RT
+    
+    VPCPrivateRouteTable:
+        Description: Private routing
+        Value: !Ref PrivateRouteTable
+        Export:
+            Name: !Sub ${EnvironmentName}-PRI-RT
+
+    PublicSubnets:
+        Description: A list of public subnets
+        Value: !Join [ ",", [ !Ref PublicSubnet ]]
+        Export:
+            Name: !Sub ${EnvironmentName}-PUB-NETS
+
+    PrivateSubnets:
+        Description: A list of private subnets
+        Value: !Join [ ",", [ !Ref PrivateSubnet ]]
+        Export:
+            Name: !Sub ${EnvironmentName}-PRIV-NETS
+
+    PublicSubnet:
+        Description: Public subnet
+        Value: !Ref PublicSubnet
+        Export:
+            Name: !Sub ${EnvironmentName}-PUB-SN
+
+    PrivateSubnet:
+        Description: Private subnet
+        Value: !Ref PrivateSubnet
+        Export:
+            Name: !Sub ${EnvironmentName}-PRI-SN
+
