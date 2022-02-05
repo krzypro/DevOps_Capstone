@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Kubernetes environment setup - access bastion
+Parameters:
+
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resources
+        Type: String
+
+    InstanceImageId:
+        Description: EC2 ImageId specific for region
+        Default: ami-04505e74c0741db8d # Ubuntu 20.04
+        Type: String
+
+Resources:
+
+    BastionSecGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: SSH bastion security group
+            VpcId: 
+                Fn::ImportValue: 
+                    !Sub "${EnvironmentName}-VPCID"
+            SecurityGroupIngress:
+            -   IpProtocol: tcp
+                FromPort: 22
+                ToPort: 22
+                CidrIp: 0.0.0.0/0
+            SecurityGroupEgress:
+            -   IpProtocol: tcp
+                FromPort: 0
+                ToPort: 65535
+                CidrIp: 0.0.0.0/0
+
+    BastionHost:
+        Type: AWS::EC2::Instance
+        Properties:
+            ImageId: !Ref InstanceImageId
+            #SecurityGroups:
+            #-   Ref: BastionSecGroup
+            KeyName: CapstoneEC2s
+            InstanceType: t2.micro
+            BlockDeviceMappings:
+            -   DeviceName: "/dev/sdk"
+                Ebs:
+                    VolumeSize: 8
+            NetworkInterfaces:
+            -   SubnetId: 
+                    Fn::ImportValue: !Sub "${EnvironmentName}-PUB-SN"
+                DeviceIndex: "0"
+                GroupSet:
+                -   Ref: BastionSecGroup
+                AssociatePublicIpAddress: true
+            Tags:
+            -   Key: Name
+                Value: !Sub ${EnvironmentName} SSH Bastion
+
+Outputs:
+
+    # BastionPublicIp:
+    #     Description: Public IP address of bastion host
+    #     Value: !GetAtt BastionHost.PrivateIp
+    #     Export:
+    #         Name: !Sub ${EnvironmentName}-BastionPrivateIp
+
+    BastionPublicDnsName:
+        Description: DNS name of bastion host
+        Value: !GetAtt BastionHost.PublicDnsName
+        Export:
+            Name: !Sub ${EnvironmentName}-BastionPublicDnsName
+
+    BastionSecGroup:
+        Description: Bastion security group
+        Value: !Ref BastionSecGroup
+        Export:
+            Name: !Sub ${EnvironmentName}-BastionSecGroup
