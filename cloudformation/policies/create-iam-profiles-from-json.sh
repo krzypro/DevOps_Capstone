@@ -12,5 +12,6 @@ aws iam create-role --role-name K8sNode --assume-role-policy-document file://K8s
 aws iam put-role-policy --role-name K8sNode --policy-name node --policy-document file://K8sNode.01.node.json
 aws iam put-role-policy --role-name K8sNode --policy-name ecr --policy-document file://K8sNode.02.ecr.json
 aws iam put-role-policy --role-name K8sNode --policy-name cni --policy-document file://K8sNode.03.cni.json
+aws iam put-role-policy --role-name K8sNode --policy-name AmazonEKS_CNI_Policy
 aws iam create-instance-profile --instance-profile-name K8sNode
 aws iam add-role-to-instance-profile --instance-profile-name K8sNode --role-name K8sNode
