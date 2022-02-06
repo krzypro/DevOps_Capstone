@@ -63,13 +63,7 @@ sudo tee /etc/systemd/system/kubelet.service.d/20-aws.conf <<EOF
 Environment="KUBELET_EXTRA_ARGS=--node-ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4) --node-labels=node.kubernetes.io/node="
 EOF
 
-
-sudo cat << EOF >/etc/systemd/system/kubelet.service.d/20-aws.conf
-[Service]
-Environment="KUBELET_EXTRA_ARGS=--node-ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4) --node-labels=node.kubernetes.io/node="
-EOF
-
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 
-
+sudo ./join-node.sh

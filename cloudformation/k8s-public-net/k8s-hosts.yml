@@ -22,9 +22,21 @@ Resources:
                     !Sub "${EnvironmentName}-VPCID"
             SecurityGroupIngress:
             -   IpProtocol: tcp
-                FromPort: 0
-                ToPort: 65535
+                FromPort: 22
+                ToPort: 22
                 CidrIp: 0.0.0.0/0
+            -   IpProtocol: tcp
+                FromPort: 30001
+                ToPort: 30005
+                CidrIp: 0.0.0.0/0
+            -   IpProtocol: tcp # api on master
+                FromPort: 6443
+                ToPort: 6443
+                CidrIp: 10.0.1.0/24
+            -   IpProtocol: all # allow nodes to connect kube-dns on master
+                FromPort: 53
+                ToPort: 53
+                CidrIp: 10.0.1.0/24
             SecurityGroupEgress:
             -   IpProtocol: tcp
                 FromPort: 0
@@ -40,14 +52,21 @@ Resources:
                     !Sub "${EnvironmentName}-VPCID"
             SecurityGroupIngress:
             -   IpProtocol: tcp
+                FromPort: 22
+                ToPort: 22
+                CidrIp: 0.0.0.0/0
+            -   IpProtocol: tcp # logs, metrics to master
+                FromPort: 10250
+                ToPort: 10250
+                SourceSecurityGroupId: !Ref K8sMasterSecGroup
+            -   IpProtocol: tcp # logs, metrics to master
+                FromPort: 10255
+                ToPort: 10255
+                SourceSecurityGroupId: !Ref K8sMasterSecGroup
+            -   IpProtocol: all # pod to pod communication
                 FromPort: 0
                 ToPort: 65535
-                CidrIp: 0.0.0.0/0
-            SecurityGroupEgress:
-            -   IpProtocol: tcp
-                FromPort: 0
-                ToPort: 65535
-                CidrIp: 0.0.0.0/0
+                CidrIp: 10.0.1.0/24
 
     K8sMasterHost:
         Type: AWS::EC2::Instance
@@ -66,6 +85,7 @@ Resources:
                 DeviceIndex: "0"
                 GroupSet:
                 -   Ref: K8sMasterSecGroup
+                PrivateIpAddress: 10.0.1.11
             Tags:
             -   Key: Name
                 Value: !Sub ${EnvironmentName} K8s Master
@@ -89,6 +109,7 @@ Resources:
                 DeviceIndex: "0"
                 GroupSet:
                 -   Ref: K8sWorkerSecGroup
+                PrivateIpAddress: 10.0.1.12
             Tags:
             -   Key: Name
                 Value: !Sub ${EnvironmentName} K8s Worker

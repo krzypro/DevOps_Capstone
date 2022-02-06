@@ -23,7 +23,6 @@ sudo sysctl --system
 
 sudo apt update
 
-
 sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -31,9 +30,7 @@ sudo apt update
 sudo apt install -y containerd.io docker-ce docker-ce-cli
 
 sudo mkdir -p /etc/systemd/system/docker.service.d
-## from 12 steps
 printf "[Service]\nExecStartPost=/sbin/iptables -P FORWARD ACCEPT" |  sudo tee /etc/systemd/system/docker.service.d/10-iptables.conf
-##
 
 # Create daemon json config file
 sudo tee /etc/docker/daemon.json <<EOF
@@ -53,9 +50,6 @@ sudo systemctl restart docker
 sudo systemctl enable docker
 
 sudo hostnamectl set-hostname $(curl http://169.254.169.254/latest/meta-data/hostname)
-
-# printf '[Service]\nEnvironment="KUBELET_EXTRA_ARGS=--node-ip=172.31.26.27"' | sudo tee /etc/systemd/system/kubelet.service.d/20-aws.conf
-
 sudo mkdir /etc/systemd/system/kubelet.service.d
 
 sudo tee /etc/systemd/system/kubelet.service.d/20-aws.conf <<EOF
@@ -63,13 +57,13 @@ sudo tee /etc/systemd/system/kubelet.service.d/20-aws.conf <<EOF
 Environment="KUBELET_EXTRA_ARGS=--node-ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)"
 EOF
 
-sudo kubeadm init --token-ttl 0 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem
+sudo kubeadm init --token-ttl 0 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem | tail -3 > node-join
 
+# configure kubernentes
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-
-
-
-#================
-#network
-#kubectl apply -f https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/release-1.10/config/master/aws-k8s-cni.yaml
+# enable AWS CNI
+kubectl apply -f https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/release-1.10/config/master/aws-k8s-cni.yaml
 
