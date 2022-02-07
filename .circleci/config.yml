@@ -1,5 +1,13 @@
 version: 2.1
 
+parameters:
+  env_name:
+    type: string
+    value: Capstone
+  master_k8s_node:
+    type: string
+    value: << pipeline.parameters.env_name >> K8s Master
+
 commands:
   install_dotnet:
     steps:
@@ -100,24 +108,50 @@ jobs:
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
             docker push $IMAGE_NAME:latest
   
-
+  deploy-app:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run: apk -U upgrade
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip
+      - run:
+          name: Install AWS Cli
+          command: |
+            apk add --no-cache --update python3 py3-pip 
+            pip3 install --upgrade pip
+            pip3 install --no-cache-dir awscli
+            aws --version
+      - run:
+          name: Get master K8s node
+          command: |
+            export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values=<< pipeline.parameters.master_k8s_node >> \
+                                  --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo "${MASTER_IP}"
+            # echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            # cat frontend/.env
 
 workflows:
   default:
     jobs:
-      - build-app
+      - deploy-app
+      
+      # - build-app
 
       # - lint-app:
       #     requires: [build-app]
 
-      - docker-build:
-          requires: [build-app]
-          filters:
-            branches:
-              only: master
-      #     requires: [lint-app]
-      - docker-publish:
-          requires: [docker-build]
-          filters:
-            branches:
-              only: master
+      # - docker-build:
+      #     requires: [build-app]
+      #     filters:
+      #       branches:
+      #         only: master
+      ##     requires: [lint-app]
+      # - docker-publish:
+      #     requires: [docker-build]
+      #     filters:
+      #       branches:
+      #         only: master
