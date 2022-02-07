@@ -3,10 +3,10 @@ version: 2.1
 parameters:
   env_name:
     type: string
-    value: Capstone
+    default: Capstone
   master_k8s_node:
     type: string
-    value: << pipeline.parameters.env_name >> K8s Master
+    default: << pipeline.parameters.env_name >> K8s Master
 
 commands:
   install_dotnet:
@@ -138,7 +138,7 @@ workflows:
   default:
     jobs:
       - deploy-app
-      
+
       # - build-app
 
       # - lint-app:
