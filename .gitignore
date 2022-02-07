@@ -3,3 +3,11 @@
 **/bin/*
 **/obj/*
 local/*
+helpers/private/bastion-dns
+helpers/debug-logs/*
+helpers/k8s-pod-scripts/*
+helpers/*/shared-data.ps1
+helpers/*/ssh-*
+helpers/public/tmp/join-node.sh
+helpers/*/tmp
+helpers/public/copy-to-master.ps1
