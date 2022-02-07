@@ -86,6 +86,7 @@ Resources:
                 GroupSet:
                 -   Ref: K8sMasterSecGroup
                 PrivateIpAddress: 10.0.1.11
+                AssociatePublicIpAddress: true
             Tags:
             -   Key: Name
                 Value: !Sub ${EnvironmentName} K8s Master
@@ -110,22 +111,9 @@ Resources:
                 GroupSet:
                 -   Ref: K8sWorkerSecGroup
                 PrivateIpAddress: 10.0.1.12
+                AssociatePublicIpAddress: true
             Tags:
             -   Key: Name
                 Value: !Sub ${EnvironmentName} K8s Worker
             -   Key: !Sub kubernetes.io/cluster/${EnvironmentName}
                 Value: owned
-
-# Outputs:
-
-#     BastionPublicIp:
-#         Description: Public IP address of bastion host
-#         Value: !GetAtt BastionHost.PublicIp
-#         Export:
-#             Name: !Sub ${EnvironmentName}-BastionIp
-
-#     BastionPublicDnsName:
-#         Description: DNS name of bastion host
-#         Value: !GetAtt BastionHost.PublicDnsName
-#         Export:
-#             Name: !Sub ${EnvironmentName}-BastionDnsName

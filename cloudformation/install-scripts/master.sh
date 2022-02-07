@@ -67,3 +67,5 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # enable AWS CNI
 kubectl apply -f https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/release-1.10/config/master/aws-k8s-cni.yaml
 
+sudo apt -y install mc
+sudo apt -y install lynx

@@ -66,4 +66,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 
+sudo apt -y install mc
+
 sudo ./join-node.sh
+
