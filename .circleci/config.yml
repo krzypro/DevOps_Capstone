@@ -26,7 +26,7 @@ commands:
 executors:
   docker-builder:
     environment:
-      IMAGE_NAME: pkrzysztoff/capstone-test-app
+      IMAGE_NAME: pkrzysztoff/capstone-app-${CIRCLE_WORKFLOW_ID:0:7}
     docker:
       - image: circleci/buildpack-deps:stretch
 
@@ -41,7 +41,7 @@ jobs:
           name: Check dotnet
           command: dotnet --version
       - run:
-          name: Build test application
+          name: Build application
           command: |
             cd testapp
             dotnet restore
@@ -112,7 +112,12 @@ workflows:
 
       - docker-build:
           requires: [build-app]
-
+          filters:
+            branches:
+              only: master
       #     requires: [lint-app]
       - docker-publish:
           requires: [docker-build]
+          filters:
+            branches:
+              only: master
