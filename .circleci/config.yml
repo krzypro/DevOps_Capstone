@@ -70,10 +70,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker image
-          command: docker build -t ${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}:latest .
+          command: docker build -t ${DOCKER_REPOSITORY}/${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}:latest .
       - run:
           name: Save Docker image
-          command: docker save -o image.tar ${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}
+          command: docker save -o image.tar ${DOCKER_REPOSITORY}/${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}
       - persist_to_workspace:
           root: ./
           paths: 
@@ -93,7 +93,7 @@ jobs:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker push ${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}:latest
+            docker push ${DOCKER_REPOSITORY}/${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}:latest
   
   configure-deployment-target:
     docker:
@@ -155,29 +155,31 @@ jobs:
             cd .circleci/ansible
             echo "Contents of the k8s-plane.txt file is -------"
             cat k8s-plane.txt
-            export IMAGE_NAME=${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}
+            export IMAGE_NAME=${DOCKER_REPOSITORY}/${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}
             ansible-playbook -i k8s-plane.txt deploy-blue-env.yml -vvv
 
 workflows:
   default:
     jobs:
-      - configure-deployment-target
+      - build-app
+
+      # - lint-app:
+      #     requires: [build-app]
+
+      - docker-build:
+          requires: [build-app]
+          filters:
+            branches:
+              only: master
+      #     requires: [lint-app]
+      - docker-publish:
+          requires: [docker-build]
+          filters:
+            branches:
+              only: master
+
+      - configure-deployment-target:
+          requires: [docker-publish]
+
       - deploy-blue-environment:
           requires: [configure-deployment-target]
-
-      # - build-app
-
-      # # - lint-app:
-      # #     requires: [build-app]
-
-      # - docker-build:
-      #     requires: [build-app]
-      #     filters:
-      #       branches:
-      #         only: master
-      # #     requires: [lint-app]
-      # - docker-publish:
-      #     requires: [docker-build]
-      #     filters:
-      #       branches:
-      #         only: master
