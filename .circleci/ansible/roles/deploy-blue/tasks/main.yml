@@ -19,7 +19,7 @@
 -   name: Deploy blue env
     register: out
     shell: |
-        cat "{{ home_dir }}/k8s/deployment.yml" | sed "s/IMAGE_NAME/$IMAGE_NAME/g" >> {{ home_dir }}/transformed.txt
+        cat "{{ home_dir }}/k8s/deployment.yml" | sed s/IMAGE_NAME/$IMAGE_NAME/g >> {{ home_dir }}/transformed.txt
         # echo "test2 $IMAGE_NAME"
 -   name: Output echo 3
     ansible.builtin.debug:
