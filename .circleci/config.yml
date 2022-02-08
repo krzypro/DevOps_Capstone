@@ -8,6 +8,8 @@ commands:
           command: |
             export IMAGE_NAME=pkrzysztoff/capstone-app-${CIRCLE_WORKFLOW_ID:0:7}
             export K8S_MASTER_NAME=Capstone K8s Master
+            echo "In command: ${IMAGE_NAME}"
+            echo "In command: ${K8S_MASTER_NAME}"
 
   install_dotnet:
     steps:
@@ -131,11 +133,12 @@ jobs:
       - run:
           name: Get master K8s node
           command: |
+            echo "In job step: ${IMAGE_NAME}"
+            echo "In job step: ${K8S_MASTER_NAME}"
             export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NAME}" \
                                   --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "${MASTER_IP}"
             echo ${K8S_MASTER_NAME}
-            echo ${AWS_DEFAULT_REGION}
 
 workflows:
   default:
