@@ -16,12 +16,11 @@
     copy:
         src: ../../k8s/deployment.yml
         dest: ~/k8s/deployment.yml
-#-   name: Deploy 
 -   name: Deploy blue env
     shell: |
-        echo "Env IMAGE_NAME"
-        echo $IMAGE_NAME
-        # cat ~/k8s/deployment/deployment.yml | sed "s/{{IMAGE_NAME}}/$IMAGE_NAME/g"
+        # echo "Env IMAGE_NAME"
+        # echo $IMAGE_NAME
+        cat ~/k8s/deployment/deployment.yml # | sed "s/{{IMAGE_NAME}}/$IMAGE_NAME/g"
     register: out
 -   name: Output echo 3
     ansible.builtin.debug:
