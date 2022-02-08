@@ -19,6 +19,8 @@
 #-   name: Deploy 
 -   name:   Deploy blue env
     shell: |
+        echo "Env IMAGE_NAME"
+        echo $IMAGE_NAME
         cat ~/k8s/deployment/deployment.yml | sed "s/{{IMAGE_NAME}}/$IMAGE_NAME/g"
     register: out
 -   name: Output echo 3
