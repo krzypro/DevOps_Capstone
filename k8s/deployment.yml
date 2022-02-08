@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      my-label: capstone-app
+  template:
+    metadata:
+      labels:
+        my-label: capstone-app
+        my-role: {{IMAGE_NAME}}
+    spec:
+      containers:
+      - name: capstone-test-app-container
+        image: {{IMAGE_NAME}}
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "{{IMAGE_NAME}}"
