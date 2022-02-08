@@ -1,0 +1,15 @@
+---
+-   name: Creates directory
+    file:
+        path: /tmp/k8s-setup
+        state: directory
+# -   name: Copy k8s definitions
+#     copy:
+#         src: 
+-   name:   Start application
+    shell: |
+        ls
+    register: out
+-   name: Output echo 3
+    ansible.builtin.debug:
+        var: out
