@@ -209,7 +209,7 @@ jobs:
           at: ./
       - run:
           name: Configure services pre-deploy (green)
-          no_output_timeout: 120m- run
+          no_output_timeout: 120m
           command: |
             ansible-playbook -i k8s-plane.txt green-pre-deploy.yml # -vvv
       - run:
