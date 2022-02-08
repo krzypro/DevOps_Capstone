@@ -1,16 +1,6 @@
 version: 2.1
 
 commands:
-  configure_constants:
-    steps:
-      - run:
-          name: Configure constants
-          command: |
-            export IMAGE_NAME=pkrzysztoff/capstone-app-${CIRCLE_WORKFLOW_ID:0:7}
-            export K8S_MASTER_NAME=Capstone K8s Master
-            echo "In command: ${IMAGE_NAME}"
-            echo "In command: ${K8S_MASTER_NAME}"
-
   install_dotnet:
     steps:
       - run:
@@ -33,18 +23,12 @@ commands:
             wget -O ~/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64 &&\
               chmod +x ~/hadolint
 
-executors:
-  docker-builder:
-    docker:
-      - image: circleci/buildpack-deps:stretch
-
 jobs:
   build-app:
     docker:
       - image: cimg/base:2020.01
     steps:
       - checkout
-      - configure_constants
       - install_dotnet
       - run:
           name: Check dotnet
@@ -67,7 +51,6 @@ jobs:
       - image: cimg/base:2020.01
     steps:
       - checkout
-      - configure_constants
       - install_dotnet
       - install_hadolint
       - run:
@@ -78,28 +61,32 @@ jobs:
             dotnet format --verify-no-changes
 
   docker-build:
-    executor: docker-builder
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    environment:
+      - IMAGE_NAME: ${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - checkout
-      - configure_constants
       - attach_workspace:
           at: ./
       - setup_remote_docker
       - run:
           name: Build Docker image
-          command: docker build -t $IMAGE_NAME:latest .
+          command: docker build -t ${IMAGE_NAME}:latest .
       - run:
           name: Save Docker image
-          command: docker save -o image.tar $IMAGE_NAME
+          command: docker save -o image.tar ${IMAGE_NAME}
       - persist_to_workspace:
           root: ./
           paths: 
             - ./image.tar
 
   docker-publish:
-    executor: docker-builder
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    environment:
+      - IMAGE_NAME: ${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}
     steps:
-      - configure_constants
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker
@@ -117,7 +104,6 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
-      - configure_constants
       - run: apk -U upgrade
       - run:
           name: Install dependencies
