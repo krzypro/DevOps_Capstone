@@ -167,6 +167,21 @@ jobs:
             echo "BLUE ENV URL: ${BLUE_ENV_URL}"
             echo "EXPECTED STRING: Blue (${CIRCLE_WORKFLOW_ID:0:7})"
 
+            attempts=24
+            sleepSeconds=5
+
+            while [ $attempts -ge 0 ]
+            do
+                if curl "${BLUE_ENV_URL}" | grep "/html"
+                then
+                    attempts=0
+                else
+                    echo "Attempts left: $attempts"
+                    sleep $sleepSeconds
+                    attempts=$(( $attempts - 1))
+                fi
+            done
+
             if curl "${BLUE_ENV_URL}" | grep "Blue (${CIRCLE_WORKFLOW_ID:0:7})"
             then
                 exit 0
@@ -181,7 +196,7 @@ jobs:
       - run:
           name: echo
           command: echo "green promotion!"
-          
+
 workflows:
   default:
     jobs:
