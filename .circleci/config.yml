@@ -153,24 +153,24 @@ jobs:
             export BUILD_ID=${CIRCLE_WORKFLOW_ID:0:7}
             ansible-playbook -i k8s-plane.txt deploy-blue-env.yml # -vvv
 
-    smoke-test-blue-environment:
-      docker:
-        - image: amazon/aws-cli
-      steps:
-        - checkout
-        - run:
-            name: Blue env smoke test.
-            command: |
-              export BLUE_ENV_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
-                                  --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-              export BLUE_ENV_URL="http://${BLUE_ENV_IP}:30002"
-              echo "BLUE ENV URL: ${BLUE_ENV_IP}"
-              if curl "${BLUE_ENV_URL}" | grep "Blue (${CIRCLE_WORKFLOW_ID:0:7})"
-              then
-                  return 0
-              else
-                  return 1
-              fi
+  smoke-test-blue-environment:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Blue env smoke test.
+          command: |
+            export BLUE_ENV_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
+                                --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export BLUE_ENV_URL="http://${BLUE_ENV_IP}:30002"
+            echo "BLUE ENV URL: ${BLUE_ENV_IP}"
+            if curl "${BLUE_ENV_URL}" | grep "Blue (${CIRCLE_WORKFLOW_ID:0:7})"
+            then
+                return 0
+            else
+                return 1
+            fi
 workflows:
   default:
     jobs:
