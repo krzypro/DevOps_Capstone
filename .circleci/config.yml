@@ -95,7 +95,7 @@ jobs:
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
             docker push ${DOCKER_IMAGE_PREFIX}-${CIRCLE_WORKFLOW_ID:0:7}:latest
   
-  deploy-app:
+  configure-deployment-target:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -115,28 +115,68 @@ jobs:
       - run:
           name: Get master K8s node
           command: |
-            export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
-                                  --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            echo "${MASTER_IP}"
+            aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
+                                  --query 'Reservations[*].Instances[*].PublicIpAddress' --output text > .circleci/ansible/k8s-plane.txt
+            cat .circleci/ansible/k8s-plane.txt
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - .circleci/ansible/k8s-plane.txt
+
+  deploy-blue-environment:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run: apk -U upgrade
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip
+      - run:
+          name: Install AWS Cli
+          command: |
+            apk add --no-cache --update python3 py3-pip 
+            pip3 install --upgrade pip
+            pip3 install --no-cache-dir awscli
+            aws --version
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - add_ssh_keys:
+          fingerprints: ["e5:bc:cc:25:fb:79:b5:64:60:7b:11:3c:ca:f9:e3:b5"]
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Deploy application
+          no_output_timeout: 120m
+          command: |
+            cd .circleci/ansible
+            echo "Contents of the k8s-plane.txt file is -------"
+            cat k8s-plane.txt
+            # ansible-playbook -i inventory.txt deploy-backend.yml
 
 workflows:
   default:
     jobs:
-      # - deploy-app
+      - configure-deployment-target
+      - deploy-blue-environment:
+          requires: [configure-deployment-target]
 
-      - build-app
+      # - build-app
 
-      # - lint-app:
+      # # - lint-app:
+      # #     requires: [build-app]
+
+      # - docker-build:
       #     requires: [build-app]
-
-      - docker-build:
-          requires: [build-app]
-          filters:
-            branches:
-              only: master
-      #     requires: [lint-app]
-      - docker-publish:
-          requires: [docker-build]
-          filters:
-            branches:
-              only: master
+      #     filters:
+      #       branches:
+      #         only: master
+      # #     requires: [lint-app]
+      # - docker-publish:
+      #     requires: [docker-build]
+      #     filters:
+      #       branches:
+      #         only: master
