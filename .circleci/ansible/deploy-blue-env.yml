@@ -7,10 +7,14 @@
     become_user: root
     gather_facts: false
     vars:
-    - ansible_python_interpreter: /usr/bin/python3
-    - ansible_host_key_checking: false
-    - ansible_stdout_callback: yaml
-    - home_dir: /home/ubuntu
-    
+        - ansible_python_interpreter: /usr/bin/python3
+        - ansible_host_key_checking: false
+        - ansible_stdout_callback: yaml
+        - home_dir: /home/ubuntu
+
+    environment:
+        - DOCKER_IMAGE_PREFIX: "{{ lookup('env', 'DOCKER_IMAGE_PREFIX') }}"
+        - CIRCLE_WORKFLOW_ID: "{{ lookup('env', 'CIRCLE_WORKFLOW_ID') }}"
+
     roles:
     -   deploy-blue

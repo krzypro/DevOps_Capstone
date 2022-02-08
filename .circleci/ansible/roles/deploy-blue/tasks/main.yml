@@ -1,12 +1,22 @@
 ---
+-   name:   Echo from shell
+    command: |
+        echo "Environment vars"
+        echo $DOCKER_IMAGE_PREFIX
+        echo $CIRCLE_WORKFLOW_ID
+    register: out_env
+-   name: Output echo 3
+    ansible.builtin.debug:
+        var: out_env
 -   name: Creates directory
     file:
-        path: /tmp/k8s
+        path: ~/k8s
         state: directory
 -   name: Copy k8s definitions
     copy:
         src: ../../k8s/deployment.yml
-        dest: /tmp/k8s/deployment.yml
+        dest: ~/k8s/deployment.yml
+-   name: Deploy 
 -   name:   Start application
     shell: |
         ls
