@@ -16,7 +16,7 @@
     copy:
         src: ../../k8s/deployment.yml
         dest: ~/k8s/deployment.yml
--   name: Deploy 
+#-   name: Deploy 
 -   name:   Start application
     shell: |
         ls
