@@ -164,7 +164,9 @@ jobs:
             export BLUE_ENV_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
                                 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             export BLUE_ENV_URL="http://${BLUE_ENV_IP}:30002"
-            echo "BLUE ENV URL: ${BLUE_ENV_IP}"
+            echo "BLUE ENV URL: ${BLUE_ENV_URL}"
+            echo "EXPECTED STRING: Blue (${CIRCLE_WORKFLOW_ID:0:7})"
+            
             if curl "${BLUE_ENV_URL}" | grep "Blue (${CIRCLE_WORKFLOW_ID:0:7})"
             then
                 return 0
