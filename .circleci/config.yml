@@ -119,31 +119,28 @@ jobs:
       - run:
           name: Get master K8s node
           command: |
-            echo "In job step: ${IMAGE_NAME}"
-            echo "In job step: ${K8S_MASTER_NAME}"
             export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
                                   --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "${MASTER_IP}"
-            echo ${K8S_MASTER_NODE_NAME}
 
 workflows:
   default:
     jobs:
-      - deploy-app
+      # - deploy-app
 
-      # - build-app
+      - build-app
 
       # - lint-app:
       #     requires: [build-app]
 
-      # - docker-build:
-      #     requires: [build-app]
-      #     filters:
-      #       branches:
-      #         only: master
-      ##     requires: [lint-app]
-      # - docker-publish:
-      #     requires: [docker-build]
-      #     filters:
-      #       branches:
-      #         only: master
+      - docker-build:
+          requires: [build-app]
+          filters:
+            branches:
+              only: master
+      #     requires: [lint-app]
+      - docker-publish:
+          requires: [docker-build]
+          filters:
+            branches:
+              only: master
