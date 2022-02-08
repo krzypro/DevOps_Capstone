@@ -3,15 +3,15 @@
     file:
         path: /tmp/k8s-setup
         state: directory
--   name: Copy k8s definitions
-    copy:
-        src: ../../k8s/deployment.yml
-        dest: ~/k8s/deployment.yml
 -   name:   Start application
     shell: |
         ls
         ls k8s/
     register: out
+-   name: Copy k8s definitions
+    copy:
+        src: ../../k8s/deployment.yml
+        dest: ~/k8s/deployment.yml
 -   name: Output echo 3
     ansible.builtin.debug:
         var: out
