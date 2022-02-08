@@ -11,12 +11,12 @@ spec:
   template:
     metadata:
       labels:
-        my-label: capstone-app
-        my-role: {{IMAGE_NAME}}
+        my-label: capstone-app-___BUILD_ID___
+        my-role: ___IMAGE_NAME___
     spec:
       containers:
       - name: capstone-test-app-container
-        image: {{IMAGE_NAME}}
+        image: ___IMAGE_NAME___
         env:
         - name: ASPNETCORE_ENVIRONMENT
-          value: "{{IMAGE_NAME}}"
+          value: "___IMAGE_NAME___"

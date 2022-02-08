@@ -14,6 +14,7 @@
 
     environment:
         - DOCKER_IMAGE_PREFIX: "{{ lookup('env', 'DOCKER_IMAGE_PREFIX') }}"
+        - BUILD_ID: "{{ lookup('env', 'BUILD_ID') }}"
         - IMAGE_NAME: "{{ lookup('env', 'IMAGE_NAME') }}"
 
     roles:
