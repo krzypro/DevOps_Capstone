@@ -17,11 +17,11 @@
         src: ../../k8s/deployment.yml
         dest: "{{ home_dir }}/k8s/deployment.yml"
 -   name: Deploy blue env
+    chdir: "{{ home_dir }}"
+    register: out
     shell: |
         cat "{{ home_dir }}/k8s/deployment.yml" | set "s/\{\{IMAGE_NAME\}\}/{{ home_dir }}/g"
         # echo "test2 $IMAGE_NAME"
-    chdir: "{{ home_dir }}"
-    register: out
 -   name: Output echo 3
     ansible.builtin.debug:
         var: out
