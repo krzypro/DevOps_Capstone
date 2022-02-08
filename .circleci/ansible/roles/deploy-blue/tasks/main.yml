@@ -17,9 +17,9 @@
         src: ../../k8s/deployment.yml
         dest: ~/k8s/deployment.yml
 #-   name: Deploy 
--   name:   Start application
+-   name:   Deploy blue env
     shell: |
-        ls
+        cat ~/k8s/deployment/deployment.yml | sed "s/{{IMAGE_NAME}}/$IMAGE_NAME/g"
     register: out
 -   name: Output echo 3
     ansible.builtin.debug:
