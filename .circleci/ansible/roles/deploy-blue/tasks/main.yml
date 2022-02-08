@@ -1,12 +1,12 @@
 ---
 -   name: Creates directory
     file:
-        path: /tmp/k8s-setup
+        path: /tmp/k8s
         state: directory
 -   name: Copy k8s definitions
     copy:
         src: ../../k8s/deployment.yml
-        dest: ~/k8s/deployment.yml
+        dest: /tmp/k8s/deployment.yml
 -   name:   Start application
     shell: |
         ls
