@@ -131,7 +131,7 @@ jobs:
       - run:
           name: Get master K8s node
           command: |
-            export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values=${K8S_MASTER_NAME} \
+            export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NAME}" \
                                   --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "${MASTER_IP}"
             # echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
