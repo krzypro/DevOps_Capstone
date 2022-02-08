@@ -1,14 +1,14 @@
 version: 2.1
 
-parameters:
-  env_name:
-    type: string
-    default: Capstone
-  master_k8s_node:
-    type: string
-    default: << pipeline.parameters.env_name >> K8s Master
-
 commands:
+  configure_constants:
+    steps:
+      - run:
+          name: Configure constants
+          command: |
+            export IMAGE_NAME=pkrzysztoff/capstone-app-${CIRCLE_WORKFLOW_ID:0:7}
+            export K8S_MASTER_NAME=Capstone K8s Master
+
   install_dotnet:
     steps:
       - run:
@@ -33,8 +33,6 @@ commands:
 
 executors:
   docker-builder:
-    environment:
-      IMAGE_NAME: pkrzysztoff/capstone-app-<< pipeline.number >>
     docker:
       - image: circleci/buildpack-deps:stretch
 
@@ -44,6 +42,7 @@ jobs:
       - image: cimg/base:2020.01
     steps:
       - checkout
+      - configure_constants
       - install_dotnet
       - run:
           name: Check dotnet
@@ -66,6 +65,7 @@ jobs:
       - image: cimg/base:2020.01
     steps:
       - checkout
+      - configure_constants
       - install_dotnet
       - install_hadolint
       - run:
@@ -79,6 +79,7 @@ jobs:
     executor: docker-builder
     steps:
       - checkout
+      - configure_constants
       - attach_workspace:
           at: ./
       - setup_remote_docker
@@ -96,6 +97,7 @@ jobs:
   docker-publish:
     executor: docker-builder
     steps:
+      - configure_constants
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker
@@ -113,6 +115,7 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - configure_constants
       - run: apk -U upgrade
       - run:
           name: Install dependencies
@@ -128,7 +131,7 @@ jobs:
       - run:
           name: Get master K8s node
           command: |
-            export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values=<< pipeline.parameters.master_k8s_node >> \
+            export MASTER_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values=${K8S_MASTER_NAME} \
                                   --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "${MASTER_IP}"
             # echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
