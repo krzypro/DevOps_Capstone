@@ -20,8 +20,8 @@
 -   name: Green pre-deploy - move services
     shell: |
         export KUBECONFIG=/etc/kubernetes/admin.conf
-        kubectl apply -f "{{ home_dir }}/k8s/green-service-to-blue.yml"
-        kubectl apply -f "{{ home_dir }}/k8s/gray.yml"
+        kubectl apply -f "{{ home_dir }}/k8s/green-service-to-blue-env.yml"
+        kubectl apply -f "{{ home_dir }}/k8s/gray-service.yml"
     register: deploy_output
 -   name: Deploy output
     ansible.builtin.debug:
