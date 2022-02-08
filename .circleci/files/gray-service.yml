@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: capstone-test-app-gray-service-${TARGET_ROLE}
+  labels:
+    app: capstone test app gray service
+    role: test-${TARGET_ROLE}
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone test app
+    role: ${TARGET_ROLE}
+  ports:
+    - port: 30002
+      targetPort: 3000
