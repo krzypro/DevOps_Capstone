@@ -155,7 +155,7 @@ jobs:
             cd .circleci/ansible
             echo "Contents of the k8s-plane.txt file is -------"
             cat k8s-plane.txt
-            ansible-playbook -i k8s-plane.txt deploy-backend.yml
+            ansible-playbook -i k8s-plane.txt deploy-blue-env.yml
 
 workflows:
   default:
