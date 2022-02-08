@@ -162,25 +162,25 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-app
+      - build-app
 
-      # # - lint-app:
-      # #     requires: [build-app]
-
-      # - docker-build:
+      # - lint-app:
       #     requires: [build-app]
-      #     filters:
-      #       branches:
-      #         only: master
-      # #     requires: [lint-app]
-      # - docker-publish:
-      #     requires: [docker-build]
-      #     filters:
-      #       branches:
-      #         only: master
 
-      - configure-deployment-target #:
-          # requires: [docker-publish]
+      - docker-build:
+          requires: [build-app]
+          filters:
+            branches:
+              only: master
+      #     requires: [lint-app]
+      - docker-publish:
+          requires: [docker-build]
+          filters:
+            branches:
+              only: master
+
+      - configure-deployment-target:
+          requires: [docker-publish]
 
       - deploy-blue-environment:
           requires: [configure-deployment-target]
