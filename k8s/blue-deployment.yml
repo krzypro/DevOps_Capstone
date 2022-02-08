@@ -16,25 +16,8 @@ spec:
         environment: blue
     spec:
       containers:
-      - name: capstone-test-app-container
+      - name: capstone-app-blue-container
         image: ___IMAGE_NAME___
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Blue (___BUILD_ID___)"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: capstone-app-blue-service
-  namespace: default
-  annotations:
-        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
-spec:
-  type: LoadBalancer
-  selector:
-    app: capstone-app
-    environment: blue
-  ports:
-    - port: 80
-      targetPort: 80
-      nodePort: 30002

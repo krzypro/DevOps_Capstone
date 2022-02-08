@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: capstone-app
+      environment: green
+  template:
+    metadata:
+      labels:
+        app: capstone-app
+        environment: green
+    spec:
+      containers:
+      - name: capstone-app-green-container
+        image: ___IMAGE_NAME___
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Green (___BUILD_ID___)"

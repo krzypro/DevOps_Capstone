@@ -1,0 +1,21 @@
+---
+-   name: Remote EC deployment
+    hosts: all
+    user: ubuntu
+    become: true
+    become_method: sudo
+    become_user: root
+    gather_facts: false
+    vars:
+        - ansible_python_interpreter: /usr/bin/python3
+        - ansible_host_key_checking: false
+        - ansible_stdout_callback: yaml
+        - home_dir: /home/ubuntu
+
+    environment:
+        - DOCKER_IMAGE_PREFIX: "{{ lookup('env', 'DOCKER_IMAGE_PREFIX') }}"
+        - BUILD_ID: "{{ lookup('env', 'BUILD_ID') }}"
+        - IMAGE_NAME: "{{ lookup('env', 'IMAGE_NAME') }}"
+
+    roles:
+    -   deploy-green

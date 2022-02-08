@@ -193,9 +193,35 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
     steps:
+      - checkout
+      - run: apk -U upgrade
       - run:
-          name: echo
-          command: echo "green promotion!"
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - add_ssh_keys:
+          fingerprints: ["e5:bc:cc:25:fb:79:b5:64:60:7b:11:3c:ca:f9:e3:b5"]
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Configure services pre-deploy (green)
+          no_output_timeout: 120m- run
+          command: |
+            ansible-playbook -i k8s-plane.txt green-pre-deploy.yml # -vvv
+      - run:
+          name: Deploy application (green)
+          no_output_timeout: 120m
+          command: |
+            cd .circleci/ansible
+            echo "Contents of the k8s-plane.txt file is -------"
+            cat k8s-plane.txt
+            export IMAGE_NAME=${DOCKER_REPOSITORY}/${DOCKER_IMAGE_PREFIX}:${CIRCLE_WORKFLOW_ID:0:7}
+            export BUILD_ID=${CIRCLE_WORKFLOW_ID:0:7}
+            ansible-playbook -i k8s-plane.txt deploy-green-env.yml # -vvv
 
 workflows:
   default:
@@ -226,9 +252,9 @@ workflows:
       - smoke-test-blue-environment:
           requires: [deploy-blue-environment]
 
-      - hold:
+      - authorize-green-environment-push:
           type: approval
           requires: [smoke-test-blue-environment]
 
       - deploy-green-environment:
-          requires: [hold]
+          requires: [authorize-green-environment-push]

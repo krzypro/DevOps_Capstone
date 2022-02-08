@@ -1,20 +1,15 @@
 ---
--   name:   Echo from shell
-    command: |
-        echo "Environment vars"
-        echo $DOCKER_IMAGE_PREFIX
-        echo $IMAGE_NAME
-    register: out_env
--   name: Output echo 3
-    ansible.builtin.debug:
-        var: out_env
 -   name: Creates directory
     file:
         path: "{{ home_dir }}/k8s"
         state: directory
--   name: Copy k8s definitions
+-   name: Copy k8s blue service definition
     copy:
-        src: ../../k8s/deployment.yml
+        src: ../../k8s/blue-service.yml
+        dest: "{{ home_dir }}/k8s/"
+-   name: Copy k8s blue deployment definition
+    copy:
+        src: ../../k8s/blue-deployment.yml
         dest: "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
 -   name: Blue env - update image name
     replace:
@@ -28,12 +23,13 @@
         regexp: "___BUILD_ID___"
         replace: "{{ lookup('env', 'BUILD_ID') }}"
         backup: no
--   name: Blue env - deploy services
+-   name: Blue env - deploy application
     shell: |
         export KUBECONFIG=/etc/kubernetes/admin.conf
         echo "Deployment cmd: kubectl apply -f {{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
         kubectl delete -f "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
         kubectl create -f "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        kubectl apply -f "{{ home_dir }}/k8s/blue-service.yml"
     register: deploy_output
 -   name: Deploy output
     ansible.builtin.debug:
