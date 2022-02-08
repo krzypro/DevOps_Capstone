@@ -166,12 +166,12 @@ jobs:
             export BLUE_ENV_URL="http://${BLUE_ENV_IP}:30002"
             echo "BLUE ENV URL: ${BLUE_ENV_URL}"
             echo "EXPECTED STRING: Blue (${CIRCLE_WORKFLOW_ID:0:7})"
-            
+
             if curl "${BLUE_ENV_URL}" | grep "Blue (${CIRCLE_WORKFLOW_ID:0:7})"
             then
-                return 0
+                exit 0
             else
-                return 1
+                exit 1
             fi
 workflows:
   default:
