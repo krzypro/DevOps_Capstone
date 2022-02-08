@@ -159,7 +159,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Blue env smoke test.
+          name: Blue env smoke test
           command: |
             export BLUE_ENV_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
                                 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
@@ -170,7 +170,7 @@ jobs:
             attempts=24
             sleepSeconds=5
 
-            while [ $attempts -ge 0 ]
+            while [ $attempts -gt 0 ]
             do
                 if curl "${BLUE_ENV_URL}" | grep "/html"
                 then
