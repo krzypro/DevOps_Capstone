@@ -7,12 +7,13 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      my-label: capstone-app
+      app: capstone-app
+      version: capstone-app-___BUILD_ID___
   template:
     metadata:
       labels:
-        my-label: capstone-app-___BUILD_ID___
-        my-role: ___IMAGE_NAME___
+        app: capstone-app
+        version: capstone-app-___BUILD_ID___
     spec:
       containers:
       - name: capstone-test-app-container
@@ -20,3 +21,19 @@ spec:
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: "___IMAGE_NAME___"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capstone-app-blue-service
+  namespace: default
+  annotations:
+        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone-app
+    version: capstone-app-___BUILD_ID___
+  ports:
+    - port: 80
+      targetPort: 30002
