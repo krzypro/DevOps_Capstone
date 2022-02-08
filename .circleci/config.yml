@@ -211,6 +211,7 @@ jobs:
           name: Configure services pre-deploy (green)
           no_output_timeout: 120m
           command: |
+            cd .circleci/ansible
             ansible-playbook -i k8s-plane.txt green-pre-deploy.yml # -vvv
       - run:
           name: Deploy application (green)
