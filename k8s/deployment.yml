@@ -36,4 +36,5 @@ spec:
     version: capstone-app-___BUILD_ID___
   ports:
     - port: 80
-      targetPort: 30002
+      targetPort: 80
+      nodePort: 30002
