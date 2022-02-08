@@ -8,19 +8,19 @@ spec:
   selector:
     matchLabels:
       app: capstone-app
-      version: capstone-app-___BUILD_ID___
+      environment: blue
   template:
     metadata:
       labels:
         app: capstone-app
-        version: capstone-app-___BUILD_ID___
+        environment: blue
     spec:
       containers:
       - name: capstone-test-app-container
         image: ___IMAGE_NAME___
         env:
         - name: ASPNETCORE_ENVIRONMENT
-          value: "___IMAGE_NAME___"
+          value: "Blue (___BUILD_ID___)"
 ---
 apiVersion: v1
 kind: Service
@@ -33,7 +33,7 @@ spec:
   type: LoadBalancer
   selector:
     app: capstone-app
-    version: capstone-app-___BUILD_ID___
+    environment: blue
   ports:
     - port: 80
       targetPort: 80
