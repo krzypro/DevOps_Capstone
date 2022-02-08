@@ -6,7 +6,7 @@
 -   name: Copy k8s definitions
     copy:
         src: ../../k8s/deployment.yml
-        dst: ~/k8s/deployment.yml
+        dest: ~/k8s/deployment.yml
 -   name:   Start application
     shell: |
         ls
