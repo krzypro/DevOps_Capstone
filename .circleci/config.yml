@@ -173,6 +173,15 @@ jobs:
             else
                 exit 1
             fi
+
+  deploy-green-environment:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - run:
+          name: echo
+          command: echo "green promotion!"
+          
 workflows:
   default:
     jobs:
@@ -201,3 +210,10 @@ workflows:
 
       - smoke-test-blue-environment:
           requires: [deploy-blue-environment]
+
+      - hold:
+          type: approval
+          requires: [smoke-test-blue-environment]
+
+      - deploy-green-environment:
+          requires: [hold]
