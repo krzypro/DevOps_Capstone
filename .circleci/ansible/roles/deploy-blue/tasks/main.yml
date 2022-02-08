@@ -16,11 +16,6 @@
     copy:
         src: ../../k8s/deployment.yml
         dest: "{{ home_dir }}/k8s/deployment.yml"
--   name: Deploy blue env
-    shell: |
-        cat "{{ home_dir }}/k8s/deployment/deployment.yml"
-    chdir: "{{ home_dir }}"
-    register: out
 -   name: Output echo 3
     ansible.builtin.debug:
         var: out
