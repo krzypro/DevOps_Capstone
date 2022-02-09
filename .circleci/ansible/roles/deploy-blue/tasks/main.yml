@@ -10,25 +10,31 @@
 -   name: Copy k8s blue deployment definition
     copy:
         src: ../../k8s/blue-deployment.yml
-        dest: "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        dest: "{{ home_dir }}/k8s/deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
 -   name: Blue env - update image name
     replace:
-        path: "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        path: "{{ home_dir }}/k8s/deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
         regexp: "___IMAGE_NAME___"
         replace: "{{ lookup('env', 'IMAGE_NAME') }}"
         backup: no
 -   name: Blue env - update build id
     replace:
-        path: "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        path: "{{ home_dir }}/k8s/deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
         regexp: "___BUILD_ID___"
         replace: "{{ lookup('env', 'BUILD_ID') }}"
+        backup: no
+-   name: Blue env - update timestamp
+    replace:
+        path: "{{ home_dir }}/k8s/deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        regexp: "___TIMESTAMP___"
+        replace: "{{ lookup('pipe', \"date '+%Y-%m-%d %H:%M:%S'\") }}"
         backup: no
 -   name: Blue env - deploy application
     shell: |
         export KUBECONFIG=/etc/kubernetes/admin.conf
-        echo "Deployment cmd: kubectl apply -f {{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
-        kubectl delete -f "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
-        kubectl create -f "{{ home_dir }}/k8s/blue-deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        echo "Deployment cmd: kubectl apply -f {{ home_dir }}/k8s/deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        kubectl delete -f "{{ home_dir }}/k8s/deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
+        kubectl create -f "{{ home_dir }}/k8s/deployment-{{ lookup('env', 'BUILD_ID') }}.yml"
         kubectl apply -f "{{ home_dir }}/k8s/blue-service.yml"
     register: deploy_output
 -   name: Deploy output

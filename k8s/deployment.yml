@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: capstone-app-blue-deploy
+  name: capstone-app-___BUILD_ID___-deploy
   namespace: default
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       app: capstone-app
-      environment: blue
+      version: ___BUILD_ID___
   template:
     metadata:
       labels:
         app: capstone-app
-        environment: blue
+        version: ___BUILD_ID___
     spec:
       containers:
       - name: capstone-app-blue-container
         image: ___IMAGE_NAME___
         env:
         - name: ASPNETCORE_ENVIRONMENT
-          value: "Blue (___BUILD_ID___)"
+          value: "Version: ___BUILD_ID___, timestamp: ___TIMESTAMP___"
