@@ -18,4 +18,4 @@
         - IMAGE_NAME: "{{ lookup('env', 'IMAGE_NAME') }}"
 
     roles:
-    -   deploy-green
+    -   promote-blue-to-green

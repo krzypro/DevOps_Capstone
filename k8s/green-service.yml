@@ -9,7 +9,7 @@ spec:
   type: LoadBalancer
   selector:
     app: capstone-app
-    environment: ___TARGET___
+    version: ___BUILD_ID___
   ports:
     - port: 80
       targetPort: 80
