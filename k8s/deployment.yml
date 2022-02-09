@@ -16,7 +16,7 @@ spec:
         version: ___BUILD_ID___
     spec:
       containers:
-      - name: capstone-app-blue-container
+      - name: capstone-app-container
         image: ___IMAGE_NAME___
         env:
         - name: ASPNETCORE_ENVIRONMENT
