@@ -98,7 +98,7 @@ Resources:
         Properties:
             ImageId: !Ref InstanceImageId
             KeyName: CapstoneEC2s
-            InstanceType: t2.micro
+            InstanceType: t3.small # t2.micro
             IamInstanceProfile: K8sNode
             BlockDeviceMappings:
             -   DeviceName: "/dev/sdk"
