@@ -151,7 +151,7 @@ jobs:
             cat k8s-plane.txt
             export IMAGE_NAME=${DOCKER_REPOSITORY}/${DOCKER_IMAGE_PREFIX}:${CIRCLE_WORKFLOW_ID:0:7}
             export BUILD_ID=${CIRCLE_WORKFLOW_ID:0:7}
-            ansible-playbook -i k8s-plane.txt deploy-blue-env.yml # -vvv
+            ansible-playbook -i k8s-plane.txt deploy-blue.yml # -vvv
 
   smoke-test-blue-environment:
     docker:
