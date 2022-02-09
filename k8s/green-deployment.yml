@@ -4,7 +4,7 @@ metadata:
   name: capstone-app-green-deploy
   namespace: default
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: capstone-app
