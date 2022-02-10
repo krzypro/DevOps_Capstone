@@ -189,7 +189,7 @@ jobs:
                 exit 1
             fi
 
-  deploy-green-environment:
+  promote-to-green-environment:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -212,7 +212,7 @@ jobs:
           no_output_timeout: 120m
           command: |
             cd .circleci/ansible
-            ansible-playbook -i k8s-plane.txt green-pre-deploy.yml # -vvv
+            ansible-playbook -i k8s-plane.txt promote-blue-to-green.yml # -vvv
       - run:
           name: Deploy application (green)
           no_output_timeout: 120m
@@ -224,20 +224,56 @@ jobs:
             export BUILD_ID=${CIRCLE_WORKFLOW_ID:0:7}
             ansible-playbook -i k8s-plane.txt promote-blue-to-greem.yml # -vvv
 
+  smoke-test-green-environment:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Blue env smoke test
+          command: |
+            export GREEN_ENV_IP=$(aws ec2 describe-instances --filters Name=tag:Name,Values="${K8S_MASTER_NODE_NAME}" \
+                                --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export GREEN_ENV_URL="http://${GREEN_ENV_IP}:30001"
+            echo "GREEN ENV URL: ${GREEN_ENV_URL}"
+            echo "EXPECTED STRING: Build: ${CIRCLE_WORKFLOW_ID:0:7}"
+
+            attempts=24
+            sleepSeconds=5
+
+            while [ $attempts -gt 0 ]
+            do
+                if curl "${GREEN_ENV_URL}" | grep "/html"
+                then
+                    attempts=0
+                else
+                    echo "Attempts left: $attempts"
+                    sleep $sleepSeconds
+                    attempts=$(( $attempts - 1))
+                fi
+            done
+
+            if curl "${GREEN_ENV_URL}" | grep "Build: ${CIRCLE_WORKFLOW_ID:0:7}"
+            then
+                exit 0
+            else
+                exit 1
+            fi
+
 workflows:
   default:
     jobs:
       - build-app
 
-      # - lint-app:
-      #     requires: [build-app]
+      - lint-app:
+          requires: [build-app]
 
       - docker-build:
-          requires: [build-app]
+          requires: [lint-app]
           filters:
             branches:
               only: master
-      #     requires: [lint-app]
+      
       - docker-publish:
           requires: [docker-build]
           filters:
@@ -257,5 +293,8 @@ workflows:
           type: approval
           requires: [smoke-test-blue-environment]
 
-      - deploy-green-environment:
+      - promote-to-green-environment:
           requires: [authorize-green-environment-push]
+
+      - smoke-test-green-environment:
+          requires: [promote-to-green-environment]
