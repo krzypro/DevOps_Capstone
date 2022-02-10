@@ -208,21 +208,14 @@ jobs:
       - attach_workspace:
           at: ./
       - run:
-          name: Configure services pre-deploy (green)
-          no_output_timeout: 120m
-          command: |
-            cd .circleci/ansible
-            ansible-playbook -i k8s-plane.txt promote-blue-to-green.yml # -vvv
-      - run:
-          name: Deploy application (green)
+          name: Promote application to green
           no_output_timeout: 120m
           command: |
             cd .circleci/ansible
             echo "Contents of the k8s-plane.txt file is -------"
             cat k8s-plane.txt
-            export IMAGE_NAME=${DOCKER_REPOSITORY}/${DOCKER_IMAGE_PREFIX}:${CIRCLE_WORKFLOW_ID:0:7}
             export BUILD_ID=${CIRCLE_WORKFLOW_ID:0:7}
-            ansible-playbook -i k8s-plane.txt promote-blue-to-greem.yml # -vvv
+            ansible-playbook -i k8s-plane.txt promote-blue-to-green.yml # -vvv
 
   smoke-test-green-environment:
     docker:
