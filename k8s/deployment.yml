@@ -19,5 +19,7 @@ spec:
       - name: capstone-app-container
         image: ___IMAGE_NAME___
         env:
-        - name: ASPNETCORE_ENVIRONMENT
-          value: "Version: ___BUILD_ID___, timestamp: ___TIMESTAMP___"
+        - name: CAPSTONE_BUILD
+          value: "___BUILD_ID___"
+        - name: CAPSTONE_DEPLOY
+          value: "___TIMESTAMP___"
