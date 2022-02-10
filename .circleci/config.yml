@@ -182,7 +182,7 @@ jobs:
                 fi
             done
 
-            if curl "${BLUE_ENV_URL}" | grep "Blue (${CIRCLE_WORKFLOW_ID:0:7})"
+            if curl "${BLUE_ENV_URL}" | grep "build (${CIRCLE_WORKFLOW_ID:0:7})"
             then
                 exit 0
             else
