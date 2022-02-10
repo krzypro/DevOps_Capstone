@@ -6,8 +6,8 @@ public class HomeController : Controller
 {
     public IActionResult Index()
     {
-        Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-        this.ViewData["Environment"] = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        this.ViewData["Build"] = Environment.GetEnvironmentVariable("CAPSTONE_BUILD");
+        this.ViewData["Deploy"] = Environment.GetEnvironmentVariable("CAPSTONE_DEPLOY");
         return this.View();
     }
 }

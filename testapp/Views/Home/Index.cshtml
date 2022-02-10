@@ -5,10 +5,15 @@
 <div class="text-center">
     <h1 class="display-4">Udacity Test Application</h1>
 
- @if (ViewData["Environment"] != null) {
+@if (ViewData["Build"] != null)
+{
 
-    <h2 class="display-6">Environment: @ViewData["Environment"]</h2>
+    <h2 class="display-6">Build: @ViewData["Build"]</h2>
+}
+@if (ViewData["Deploy"] != null)
+{
 
+    <small>Deploy info.: @ViewData["Deploy"]</small>
 }
 
 </div>
