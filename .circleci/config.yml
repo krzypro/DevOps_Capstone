@@ -165,7 +165,7 @@ jobs:
                                 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             export BLUE_ENV_URL="http://${BLUE_ENV_IP}:30002"
             echo "BLUE ENV URL: ${BLUE_ENV_URL}"
-            echo "EXPECTED STRING: Blue (${CIRCLE_WORKFLOW_ID:0:7})"
+            echo "EXPECTED STRING: Build: ${CIRCLE_WORKFLOW_ID:0:7}"
 
             attempts=24
             sleepSeconds=5
@@ -182,7 +182,7 @@ jobs:
                 fi
             done
 
-            if curl "${BLUE_ENV_URL}" | grep "Build: (${CIRCLE_WORKFLOW_ID:0:7})"
+            if curl "${BLUE_ENV_URL}" | grep "Build: ${CIRCLE_WORKFLOW_ID:0:7}"
             then
                 exit 0
             else
