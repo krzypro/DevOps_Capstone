@@ -66,18 +66,14 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 <details>
   <summary>Click to expand</summary>
 
-   #### CI - Broken Dockerfile - linting
-
    ![CloudFormation setup](docs/screenshots/03-broken-dockerfile-lint-status.png)
    ![CloudFormation setup](docs/screenshots/04-broken-dockerfile-lint-detail.png)
 
 </details>
 
-### CI/CD pipeline
+### CI/CD pipeline - Docker build and publish
 <details>
   <summary>Click to expand</summary>
-
-   #### Docker build and publish
 
    ![CloudFormation setup](docs/screenshots/05-docker-build.png)
    ![CloudFormation setup](docs/screenshots/06-docker-publish.png)
@@ -88,6 +84,7 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 ### Successful initial deployment
 <details>
   <summary>Click to expand</summary>
+
 
    > Green service configured on port 30001
 
@@ -103,6 +100,7 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 ### Successful blue/green deployment
 <details>
   <summary>Click to expand</summary>
+
 
    > Green service configured on port 30001 (build ID: 87347cb)
    > Blue service configured on port 30002 (build ID: cd60dc4)
