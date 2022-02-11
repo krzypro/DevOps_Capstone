@@ -1,5 +1,6 @@
-# Udacity - Cloud DevOps Engineer
 ###### Capstone Project
+#### Capstone Project
+# Udacity - Cloud DevOps Engineer
 ## Scope
 
 ### Kubernetes cluster
@@ -47,3 +48,10 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 
 ## Execution results
 
+1. CloudFormation setup
+
+![CloudFormation setup](docs/screenshots/01-cloudformation.png)
+
+1. Kubernetes setup
+
+![CloudFormation setup](docs/screenshots/02-kubernetes-setup.png)
