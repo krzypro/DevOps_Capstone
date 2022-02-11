@@ -48,10 +48,10 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 
 ## Execution results
 
-1. CloudFormation setup
+### CloudFormation setup
 
 ![CloudFormation setup](docs/screenshots/01-cloudformation.png)
 
-2. Kubernetes setup
+### Kubernetes setup
 
 ![CloudFormation setup](docs/screenshots/02-kubernetes-setup.png)
