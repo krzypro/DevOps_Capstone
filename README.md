@@ -61,3 +61,8 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 ![CloudFormation setup](docs/screenshots/03-broken-dockerfile-lint-status.png)
 ![CloudFormation setup](docs/screenshots/04-broken-dockerfile-lint-detail.png)
 
+### Docker build and publish
+
+![CloudFormation setup](docs/screenshots/05-docker-build.png)
+![CloudFormation setup](docs/screenshots/06-docker-publish.png)
+
