@@ -65,4 +65,11 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 
 ![CloudFormation setup](docs/screenshots/05-docker-build.png)
 ![CloudFormation setup](docs/screenshots/06-docker-publish.png)
+![CloudFormation setup](docs/screenshots/07-docker-image-for-initial-deployment.png)
 
+### Successful initial deployment
+> Green service configured on port 30001
+
+![CloudFormation setup](docs/screenshots/08-successful-initial-deployment.png)
+![CloudFormation setup](docs/screenshots/09-successful-initial-kubernetes-view.png)
+![CloudFormation setup](docs/screenshots/10-successful-initial-green-service.png)
