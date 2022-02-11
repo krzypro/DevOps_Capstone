@@ -46,7 +46,7 @@ Circle CI platform integrated with GitHub repository, Dockerhub account and AWS 
 Deployment tasks of Circle CI pipeline implemented with Ansible and [required roles' configuration](.circleci/ansible/), bash scripts executed over SSH and [Kubernetes objects' configuration](k8s/) for env based deployments and blue/green service management.
 
 
-## Execution results
+## [Execution results](docs/EXECUTION-RESULTS.md)
 
 ### Environment setup
 <details>

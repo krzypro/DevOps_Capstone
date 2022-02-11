@@ -1,7 +1,3 @@
-###### Capstone Project
-#### Capstone Project
-# Udacity - Cloud DevOps Engineer
-
 ## Execution results
 
 ### Environment setup
