@@ -10,7 +10,7 @@ Kubernetes cluster deployed on 2 EC2 instances (plane and worker nodes) hosted o
    - IAM Roles definition -> [policies](cloudformation/policies/)
    - network configuration on AWS (note: public net based approach was used in the project)
      - [k8s-public-net](cloudformation/k8s-public-net/network.yml) - Kubernetes cluster hosted in public subnet
-     - [k8s-private-net](cloudformation/k8s-private-net/network.yml) - Kubernetes cluster in private subnet accessible through bastion SSH host
+     - [k8s-private-net](cloudformation/k8s-private-net-with-bastion/network.yml) - Kubernetes cluster in private subnet accessible through bastion SSH host
    - EC2 instances deployment and configuration -> [k8s-public-net](cloudformation/k8s-public-net/k8s-hosts.yml)
    
 2. Scripts to install and configure Kubernetes on plane and worker nodes
