@@ -48,58 +48,86 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 
 ## Execution results
 
-### CloudFormation setup
+### Environment setup
+<details>
+  <summary>Click to expand</summary>
 
-![CloudFormation setup](docs/screenshots/01-cloudformation.png)
+   #### CloudFormation setup
 
-### Kubernetes setup
+   ![CloudFormation setup](docs/screenshots/01-cloudformation.png)
 
-![CloudFormation setup](docs/screenshots/02-kubernetes-setup.png)
+   #### Kubernetes setup
 
-### CI - Broken Dockerfile - linting
+   ![CloudFormation setup](docs/screenshots/02-kubernetes-setup.png)
 
-![CloudFormation setup](docs/screenshots/03-broken-dockerfile-lint-status.png)
-![CloudFormation setup](docs/screenshots/04-broken-dockerfile-lint-detail.png)
+</details>
 
-### Docker build and publish
+### CI/CD pipeline - failed linting
+<details>
+  <summary>Click to expand</summary>
 
-![CloudFormation setup](docs/screenshots/05-docker-build.png)
-![CloudFormation setup](docs/screenshots/06-docker-publish.png)
-![CloudFormation setup](docs/screenshots/07-docker-image-for-initial-deployment.png)
+   #### CI - Broken Dockerfile - linting
+
+   ![CloudFormation setup](docs/screenshots/03-broken-dockerfile-lint-status.png)
+   ![CloudFormation setup](docs/screenshots/04-broken-dockerfile-lint-detail.png)
+
+</details>
+
+### CI/CD pipeline
+<details>
+  <summary>Click to expand</summary>
+
+   #### Docker build and publish
+
+   ![CloudFormation setup](docs/screenshots/05-docker-build.png)
+   ![CloudFormation setup](docs/screenshots/06-docker-publish.png)
+   ![CloudFormation setup](docs/screenshots/07-docker-image-for-initial-deployment.png)
+
+</details>
 
 ### Successful initial deployment
-> Green service configured on port 30001
+<details>
+  <summary>Click to expand</summary>
 
-#### Pipeline view
-![CloudFormation setup](docs/screenshots/08-successful-initial-deployment.png)
-#### Kubernetes view
-![CloudFormation setup](docs/screenshots/09-successful-initial-kubernetes-view.png)
-#### Browser view
-![CloudFormation setup](docs/screenshots/10-successful-initial-green-service.png)
+   > Green service configured on port 30001
 
+   #### Pipeline view
+   ![CloudFormation setup](docs/screenshots/08-successful-initial-deployment.png)
+   #### Kubernetes view
+   ![CloudFormation setup](docs/screenshots/09-successful-initial-kubernetes-view.png)
+   #### Browser view
+   ![CloudFormation setup](docs/screenshots/10-successful-initial-green-service.png)
+
+</details>
 
 ### Successful blue/green deployment
-> Green service configured on port 30001 (build ID: 87347cb)
-> Blue service configured on port 30002 (build ID: cd60dc4)
+<details>
+  <summary>Click to expand</summary>
 
-#### Docker images
-![CloudFormation setup](docs/screenshots/11-docker-image-for-blue-green-deployment.png)
-#### Pipeline view
-![CloudFormation setup](docs/screenshots/12-blue-green-before-promotion-pipeline.png)
-#### Kubernetes view
-![CloudFormation setup](docs/screenshots/13-blue-green-before-promotion-kubernetes.png)
-#### Browser view
-![CloudFormation setup](docs/screenshots/14-blue-green-before-promotion-browsers.png)
+   > Green service configured on port 30001 (build ID: 87347cb)
+   > Blue service configured on port 30002 (build ID: cd60dc4)
 
-> Promote to production
-![CloudFormation setup](docs/screenshots/15-blue-green-promotion-approval.png)
+   #### Docker images
+   ![CloudFormation setup](docs/screenshots/11-docker-image-for-blue-green-deployment.png)
+   #### Pipeline view
+   ![CloudFormation setup](docs/screenshots/12-blue-green-before-promotion-pipeline.png)
+   #### Kubernetes view
+   ![CloudFormation setup](docs/screenshots/13-blue-green-before-promotion-kubernetes.png)
+   #### Browser view
+   ![CloudFormation setup](docs/screenshots/14-blue-green-before-promotion-browsers.png)
 
-> Green service repointed to deployment cd60dc4; old deployment 87347cb available for backout)
-> Blue service configured on port 30002 (build ID: cd60dc4)
+   > Promote to production
 
-#### Pipeline view
-![CloudFormation setup](docs/screenshots/16-blue-green-after-promotion-pipeline.png)
-#### Kubernetes view
-![CloudFormation setup](docs/screenshots/17-blue-green-after-promotion-kubernetes.png)
-#### Browser view
-![CloudFormation setup](docs/screenshots/18-blue-green-after-promotion-browsers.png)
+   ![CloudFormation setup](docs/screenshots/15-blue-green-promotion-approval.png)
+
+   > Green service repointed to deployment cd60dc4; old deployment 87347cb available for backout)
+   > Blue service configured on port 30002 (build ID: cd60dc4)
+
+   #### Pipeline view
+   ![CloudFormation setup](docs/screenshots/16-blue-green-after-promotion-pipeline.png)
+   #### Kubernetes view
+   ![CloudFormation setup](docs/screenshots/17-blue-green-after-promotion-kubernetes.png)
+   #### Browser view
+   ![CloudFormation setup](docs/screenshots/18-blue-green-after-promotion-browsers.png)
+
+</details>
