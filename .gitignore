@@ -11,3 +11,4 @@ helpers/*/ssh-*
 helpers/public/tmp/join-node.sh
 helpers/*/tmp
 helpers/public/copy-to-master.ps1
+__submission
