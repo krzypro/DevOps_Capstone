@@ -70,6 +70,9 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 ### Successful initial deployment
 > Green service configured on port 30001
 
+#### Pipeline view
 ![CloudFormation setup](docs/screenshots/08-successful-initial-deployment.png)
+#### Kubernetes view
 ![CloudFormation setup](docs/screenshots/09-successful-initial-kubernetes-view.png)
+#### Browser view
 ![CloudFormation setup](docs/screenshots/10-successful-initial-green-service.png)
