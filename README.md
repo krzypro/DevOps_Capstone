@@ -1,4 +1,3 @@
-###### Capstone Project
 #### Capstone Project
 # Udacity - Cloud DevOps Engineer
 ## Scope
