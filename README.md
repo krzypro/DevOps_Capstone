@@ -76,3 +76,30 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 ![CloudFormation setup](docs/screenshots/09-successful-initial-kubernetes-view.png)
 #### Browser view
 ![CloudFormation setup](docs/screenshots/10-successful-initial-green-service.png)
+
+
+### Successful blue/green deployment
+> Green service configured on port 30001 (build ID: 87347cb)
+> Blue service configured on port 30002 (build ID: cd60dc4)
+
+#### Docker images
+![CloudFormation setup](docs/screenshots/11-docker-image-for-blue-green-deployment.png)
+#### Pipeline view
+![CloudFormation setup](docs/screenshots/12-blue-green-before-promotion-pipeline.png)
+#### Kubernetes view
+![CloudFormation setup](docs/screenshots/13-blue-green-before-promotion-kubernetes.png)
+#### Browser view
+![CloudFormation setup](docs/screenshots/14-blue-green-before-promotion-browsers.png)
+
+> Promote to production
+![CloudFormation setup](docs/screenshots/15-blue-green-promotion-approval.png)
+
+> Green service repointed to deployment cd60dc4; old deployment 87347cb available for backout)
+> Blue service configured on port 30002 (build ID: cd60dc4)
+
+#### Pipeline view
+![CloudFormation setup](docs/screenshots/16-blue-green-after-promotion-pipeline.png)
+#### Kubernetes view
+![CloudFormation setup](docs/screenshots/17-blue-green-after-promotion-kubernetes.png)
+#### Browser view
+![CloudFormation setup](docs/screenshots/18-blue-green-after-promotion-browsers.png)
