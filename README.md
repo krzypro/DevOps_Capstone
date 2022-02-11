@@ -1,4 +1,5 @@
-# Udacity - Cloud DevOps Engineer - Capstone Project
+# Udacity - Cloud DevOps Engineer
+###### Capstone Project
 ## Scope
 
 ### Kubernetes cluster
@@ -28,8 +29,8 @@ Circle CI platform integrated with GitHub repository, Dockerhub account and AWS 
 1. build .Net Core sample application that will display information required to verify deployment type
 2. lint projects
 
-   - application project `dotnet format --verify-no-changes`
-   - Dockerfile `~/hadolint Dockerfile`
+   - [application project](testapp/) `dotnet format --verify-no-changes`
+   - [Dockerfile](Dockerfile) `~/hadolint Dockerfile`
    
 3. build and then publish docker image in Dockerhub
 4. deploy the image on Kubernetes cluster seamlessly using [blue/green deployment](https://kubernetes.io/blog/2018/04/30/zero-downtime-deployment-kubernetes-jenkins/) (side-by-side deployments with blue/green services allow 100% application's availability during deployment and immediate rollback if necessary)
