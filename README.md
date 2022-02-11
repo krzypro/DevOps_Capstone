@@ -55,3 +55,9 @@ Deployment tasks of Circle CI pipeline implemented with Ansible and [required ro
 ### Kubernetes setup
 
 ![CloudFormation setup](docs/screenshots/02-kubernetes-setup.png)
+
+### CI - Broken Dockerfile - linting
+
+![CloudFormation setup](docs/screenshots/03-broken-dockerfile-lint-status.png)
+![CloudFormation setup](docs/screenshots/04-broken-dockerfile-lint-detail.png)
+
